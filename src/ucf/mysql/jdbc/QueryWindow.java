@@ -1,10 +1,17 @@
 package ucf.mysql.jdbc;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -16,7 +23,7 @@ public class QueryWindow {
 	private static JPanel mMainPanel;
 	
 	private static JTextArea mSQLCommandArea;
-	private static JTextArea mSQLResultsArea;
+	private static JTable mSQLResultsArea;
 	
 	private static JTextField mUsernameTF;
 	private static JTextField mPasswordTF;
@@ -36,6 +43,9 @@ public class QueryWindow {
 	private static JSeparator js = new JSeparator();
 	
 	private static SpringLayout mSpringLayout;
+	
+	private static DBEngine mDBEngine;
+	private static DAO mDAO;
 	
 	public static void main(String[] args){
 		InitWindow();
@@ -76,9 +86,9 @@ public class QueryWindow {
 		mUsernameTF = new JTextField(20);
 		mPasswordTF = new JTextField(20);
 		mSQLCommandArea = new JTextArea(5,32);
-		mSQLResultsArea = new JTextArea(7,64);
+		mSQLResultsArea = new JTable();
 		
-		mSQLResultsArea.setEditable(false);
+		mSQLResultsArea.setPreferredSize(new Dimension(700, 100));
 		
 		mMainPanel.add(mUsernameTF);
 		mMainPanel.add(mPasswordTF);
@@ -88,8 +98,52 @@ public class QueryWindow {
 	private static void InitButtons(){
 		mConnectButton = new JButton("Connect");
 		mExecuteButton = new JButton("Execute SQL Command");
+		mExecuteButton.setEnabled(false);
 		mClearCommandButton = new JButton("Clear Command");
 		mClearResultsButton = new JButton("Clear Results");
+		
+		mConnectButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				if(!mUsernameTF.getText().isEmpty() ){
+					mDBEngine = new DBEngine("jdbc:mysql://localhost:3306/project3",mUsernameTF.getText(),mPasswordTF.getText());
+				
+					try {
+						mDBEngine.EstablishConnection();
+					} catch (SQLException e) {
+						//e.printStackTrace();
+						JOptionPane.showMessageDialog(mMainPanel, "Could not connect!\nCheck username and/or password and try again!");
+					}
+					if(mDBEngine.getConnection() != null){
+						mConnectionL.setText("jdbc:mysql://localhost:3306/project3");
+						mExecuteButton.setEnabled(true);
+					}
+				}
+			}
+		});
+		mExecuteButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				String mQuery = mSQLCommandArea.getText();
+				mDAO = new DAO(mDBEngine.getConnection());
+				
+					
+				if(mQuery.toLowerCase().startsWith("select")){
+					String[] mBrokenString = mQuery.split(" ");
+					if(mBrokenString[1] == "*");
+						
+						
+				}
+				else if(mQuery.toLowerCase().startsWith("delete")){
+					
+				}
+				else if(mQuery.toLowerCase().startsWith("instert")){
+					
+				}
+				
+			}
+			
+		});
 		
 		mMainPanel.add(mConnectButton);
 		mMainPanel.add(mExecuteButton);
@@ -126,10 +180,10 @@ public class QueryWindow {
 		mSpringLayout.putConstraint(SpringLayout.NORTH, mSQLCommandArea, 10, SpringLayout.SOUTH, mSQLCommandL);
 		mSpringLayout.putConstraint(SpringLayout.WEST, mSQLCommandArea, 40, SpringLayout.EAST, mUsernameTF);
 		
-		mSpringLayout.putConstraint(SpringLayout.EAST, mClearCommandButton, 1, SpringLayout.EAST, mSQLCommandArea);
+		mSpringLayout.putConstraint(SpringLayout.EAST, mClearCommandButton, 0, SpringLayout.EAST, mSQLCommandArea);
 		mSpringLayout.putConstraint(SpringLayout.NORTH, mClearCommandButton, 10, SpringLayout.SOUTH, mSQLCommandArea);
 		
-		mSpringLayout.putConstraint(SpringLayout.WEST, mExecuteButton, 1, SpringLayout.WEST, mSQLCommandArea);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mExecuteButton, 0, SpringLayout.WEST, mSQLCommandArea);
 		mSpringLayout.putConstraint(SpringLayout.NORTH, mExecuteButton, 10, SpringLayout.SOUTH, mSQLCommandArea);
 		
 		mSpringLayout.putConstraint(SpringLayout.SOUTH, mSQLResultsArea, -10, SpringLayout.SOUTH, mMainPanel);
