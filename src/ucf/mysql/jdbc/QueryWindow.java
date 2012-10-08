@@ -4,6 +4,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -12,9 +13,7 @@ import javax.swing.SpringLayout;
 public class QueryWindow {
 	private static JFrame mJFrame;
 	
-	private static JPanel mCommandPanel;
-	private static JPanel mAdminPanel;
-	private static JPanel mSQLPanel;
+	private static JPanel mMainPanel;
 	
 	private static JTextArea mSQLCommandArea;
 	private static JTextArea mSQLResultsArea;
@@ -25,11 +24,16 @@ public class QueryWindow {
 	private static JLabel mUsernameL;
 	private static JLabel mPasswordL;
 	private static JLabel mConnectionL;
+	private static JLabel mDBInformationL;
+	private static JLabel mSQLCommandL;
+	private static JLabel mSQLExecutionL;
 	
 	private static JButton mExecuteButton;
 	private static JButton mClearCommandButton;
 	private static JButton mConnectButton;
 	private static JButton mClearResultsButton;
+	
+	private static JSeparator js = new JSeparator();
 	
 	private static SpringLayout mSpringLayout;
 	
@@ -38,92 +42,105 @@ public class QueryWindow {
 	}
 	private static void InitWindow(){
 		mJFrame = new JFrame("Query Window");
-		mSpringLayout = new SpringLayout();
-		mJFrame.setSize(1000,1000);
-		mJFrame.setLayout(mSpringLayout);
+		mMainPanel = new JPanel();
+		mJFrame.setSize(750,350);
 		
-		InitAdminPanel();
-		InitCommandPanel();
+		InitLabels();
+		InitTextFields();
+		InitButtons();
+		InitPlacement();
 		
-		
-		
-		mJFrame.add(mCommandPanel);
-		mJFrame.add(mAdminPanel);
-
-		//mSpringLayout.putConstraint(SpringLayout.WEST, mAdminPanel, 5, SpringLayout.WEST, mJFrame);
-		//mSpringLayout.putConstraint(SpringLayout.NORTH, mAdminPanel, 5, SpringLayout.NORTH, mJFrame);
-		
-		//mSpringLayout.putConstraint(SpringLayout.NORTH, mCommandPanel, 5, SpringLayout.NORTH, mJFrame);
-		//mSpringLayout.putConstraint(SpringLayout.WEST, mCommandPanel, 5, SpringLayout.EAST, mAdminPanel);
+		mJFrame.add(mMainPanel);
 		
 		
 		mJFrame.setVisible(true);
 	}
-	private static void InitAdminPanel(){
-		mSpringLayout = new SpringLayout();
-		mAdminPanel = new JPanel(mSpringLayout);
-		mAdminPanel.setSize(100, 50);
-		
+	private static void InitLabels(){
 		mUsernameL = new JLabel("Username");
 		mPasswordL = new JLabel("Password");
 		mConnectionL = new JLabel("No Connection Now");
+		mDBInformationL = new JLabel("Enter Database Information");
+		mSQLCommandL = new JLabel("Enter SQL Command");
+		mSQLExecutionL = new JLabel("SQL Execution Results");
 		
-		mConnectButton = new JButton("Connect");
+		mMainPanel.add(mUsernameL);
+		mMainPanel.add(mPasswordL);
+		mMainPanel.add(mConnectionL);
+		mMainPanel.add(mDBInformationL);
+		mMainPanel.add(mSQLCommandL);
+		mMainPanel.add(mSQLExecutionL);
 		
-		mUsernameTF = new JTextField(10);
-		mPasswordTF = new JTextField(10);
-		
-		mAdminPanel.add(mUsernameL);
-		mAdminPanel.add(mPasswordL);
-		mAdminPanel.add(mConnectionL);
-		mAdminPanel.add(mConnectButton);
-		mAdminPanel.add(mUsernameTF);
-		mAdminPanel.add(mPasswordTF);
-		
-		mSpringLayout.putConstraint(SpringLayout.NORTH, mUsernameL, 10, SpringLayout.NORTH, mAdminPanel);
-		mSpringLayout.putConstraint(SpringLayout.WEST, mUsernameL, 10, SpringLayout.WEST, mAdminPanel);
-		
-		mSpringLayout.putConstraint(SpringLayout.NORTH, mUsernameTF, 10, SpringLayout.NORTH, mAdminPanel);
-		mSpringLayout.putConstraint(SpringLayout.WEST, mUsernameTF, 10, SpringLayout.EAST, mUsernameL);
-		
-		mSpringLayout.putConstraint(SpringLayout.NORTH, mPasswordL, 10, SpringLayout.SOUTH, mUsernameL);
-		mSpringLayout.putConstraint(SpringLayout.WEST, mPasswordL, 10, SpringLayout.WEST, mAdminPanel);
-		
-		mSpringLayout.putConstraint(SpringLayout.WEST, mPasswordTF, 10, SpringLayout.EAST, mPasswordL);
-		mSpringLayout.putConstraint(SpringLayout.NORTH, mPasswordTF, 10, SpringLayout.SOUTH, mUsernameTF);
-		
-		mSpringLayout.putConstraint(SpringLayout.NORTH, mConnectionL, 10, SpringLayout.SOUTH, mPasswordL);
-		mSpringLayout.putConstraint(SpringLayout.WEST, mConnectionL, 10, SpringLayout.WEST, mAdminPanel);
-		
-		mSpringLayout.putConstraint(SpringLayout.NORTH, mConnectButton, 10, SpringLayout.SOUTH, mPasswordTF);
-		mSpringLayout.putConstraint(SpringLayout.WEST, mConnectButton, 10, SpringLayout.EAST, mConnectionL);
-		
-		mAdminPanel.setVisible(true);
-		//mAdminPanel.setLayout(mSpringLayout);
+		mMainPanel.add(js);
 	}
-	private static void InitCommandPanel(){
-		mSpringLayout = new SpringLayout();
-		mCommandPanel = new JPanel(mSpringLayout);
-		mCommandPanel.setSize(400,200);
-		
+	private static void InitTextFields(){
+		mUsernameTF = new JTextField(20);
+		mPasswordTF = new JTextField(20);
 		mSQLCommandArea = new JTextArea(5,32);
+		mSQLResultsArea = new JTextArea(7,64);
+		
+		mSQLResultsArea.setEditable(false);
+		
+		mMainPanel.add(mUsernameTF);
+		mMainPanel.add(mPasswordTF);
+		mMainPanel.add(mSQLCommandArea);
+		mMainPanel.add(mSQLResultsArea);
+	}
+	private static void InitButtons(){
+		mConnectButton = new JButton("Connect");
 		mExecuteButton = new JButton("Execute SQL Command");
 		mClearCommandButton = new JButton("Clear Command");
+		mClearResultsButton = new JButton("Clear Results");
 		
-		mCommandPanel.add(mSQLCommandArea);
-		mCommandPanel.add(mExecuteButton);
-		mCommandPanel.add(mClearCommandButton);
-		
-		mSpringLayout.putConstraint(SpringLayout.WEST, mSQLCommandArea, 5, SpringLayout.WEST, mCommandPanel);
-		mSpringLayout.putConstraint(SpringLayout.NORTH, mSQLCommandArea, 5, SpringLayout.NORTH, mCommandPanel);
-		mSpringLayout.putConstraint(SpringLayout.NORTH, mExecuteButton, 10, SpringLayout.SOUTH, mSQLCommandArea);
-		mSpringLayout.putConstraint(SpringLayout.WEST, mExecuteButton, 5, SpringLayout.WEST, mCommandPanel);
-		mSpringLayout.putConstraint(SpringLayout.NORTH, mClearCommandButton, 10, SpringLayout.SOUTH, mSQLCommandArea);
-		mSpringLayout.putConstraint(SpringLayout.WEST, mClearCommandButton, 15, SpringLayout.EAST, mExecuteButton);
-		
-		mCommandPanel.setVisible(true);
-		//mCommandPanel.setLayout(mSpringLayout);
-		
+		mMainPanel.add(mConnectButton);
+		mMainPanel.add(mExecuteButton);
+		mMainPanel.add(mClearCommandButton);
+		mMainPanel.add(mClearResultsButton);
 	}
-	
+	private static void InitPlacement(){
+		mSpringLayout = new SpringLayout();
+		
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mDBInformationL, 10, SpringLayout.NORTH, mMainPanel);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mDBInformationL, 5, SpringLayout.WEST, mMainPanel);
+		
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mUsernameL, 15, SpringLayout.SOUTH, mDBInformationL);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mUsernameL, 5, SpringLayout.WEST, mMainPanel);
+		
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mUsernameTF, 15, SpringLayout.SOUTH, mDBInformationL);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mUsernameTF, 20, SpringLayout.EAST, mUsernameL);
+		
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mPasswordL, 15, SpringLayout.SOUTH, mUsernameL);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mPasswordL, 5, SpringLayout.WEST, mMainPanel);
+		
+		mSpringLayout.putConstraint(SpringLayout.WEST, mPasswordTF, 22, SpringLayout.EAST, mPasswordL);
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mPasswordTF, 10, SpringLayout.SOUTH, mUsernameTF);
+		
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mConnectionL, 20, SpringLayout.SOUTH, mPasswordL);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mConnectionL, 10, SpringLayout.WEST, mMainPanel);
+		
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mConnectButton, 10, SpringLayout.SOUTH, mPasswordTF);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mConnectButton, 80, SpringLayout.EAST, mConnectionL);
+		
+		mSpringLayout.putConstraint(SpringLayout.WEST, mSQLCommandL, 160, SpringLayout.EAST, mDBInformationL);
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mSQLCommandL, 10, SpringLayout.NORTH, mMainPanel);
+		
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mSQLCommandArea, 10, SpringLayout.SOUTH, mSQLCommandL);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mSQLCommandArea, 40, SpringLayout.EAST, mUsernameTF);
+		
+		mSpringLayout.putConstraint(SpringLayout.EAST, mClearCommandButton, 1, SpringLayout.EAST, mSQLCommandArea);
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mClearCommandButton, 10, SpringLayout.SOUTH, mSQLCommandArea);
+		
+		mSpringLayout.putConstraint(SpringLayout.WEST, mExecuteButton, 1, SpringLayout.WEST, mSQLCommandArea);
+		mSpringLayout.putConstraint(SpringLayout.NORTH, mExecuteButton, 10, SpringLayout.SOUTH, mSQLCommandArea);
+		
+		mSpringLayout.putConstraint(SpringLayout.SOUTH, mSQLResultsArea, -10, SpringLayout.SOUTH, mMainPanel);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mSQLResultsArea, 10, SpringLayout.WEST, mMainPanel);
+		
+		mSpringLayout.putConstraint(SpringLayout.EAST, mClearResultsButton, 0, SpringLayout.EAST, mSQLResultsArea);
+		mSpringLayout.putConstraint(SpringLayout.SOUTH, mClearResultsButton, -10, SpringLayout.NORTH, mSQLResultsArea);
+		
+		mSpringLayout.putConstraint(SpringLayout.SOUTH, mSQLExecutionL, -10, SpringLayout.NORTH, mSQLResultsArea);
+		mSpringLayout.putConstraint(SpringLayout.WEST, mSQLExecutionL, 5, SpringLayout.WEST, mMainPanel);
+		
+		mMainPanel.setLayout(mSpringLayout);
+	}
 }
