@@ -227,11 +227,10 @@ public class QueryWindow {
 					try {
 						mResults = mDAO.runQuery(mQuery);
 						mColumns = mDAO.getColumns();
+						mSQLResultsArea.setModel(new DefaultTableModel(mResults,mColumns));
 					} catch (SQLException e) {
 						JOptionPane.showMessageDialog(mMainPanel, "Could not execute query!");
 						//e.printStackTrace();
-					}finally{
-						mSQLResultsArea.setModel(new DefaultTableModel(mResults,mColumns));
 					}
 				}
 				else{
@@ -240,9 +239,7 @@ public class QueryWindow {
 						mSQLResultsArea.setModel(new DefaultTableModel(new String[][]{new String[]{"Row Updated!"}},new String[]{""}));
 					} catch (SQLException e) {
 						JOptionPane.showMessageDialog(mMainPanel, "Could not execute query!");
-						e.printStackTrace();
-					}finally{
-						
+						//e.printStackTrace();
 					}
 				}
 				
